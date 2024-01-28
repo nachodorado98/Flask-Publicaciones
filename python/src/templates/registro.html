@@ -1,0 +1,32 @@
+{% extends "inicio.html" %}
+
+{% block link %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/registro.css') }}">
+{% endblock link %}
+
+{% block principal %}
+
+<div class="container">
+    <h1>Crear Una Cuenta</h1>
+    <form id="formulario" method="POST" action="#" autocomplete="off">
+        <label for="username">Usuario:</label>
+        <input type="text" id="usuario" name="usuario" autocomplete="off" required>
+
+        <label for="password">Contraseña:</label>
+        <input type="password" id="contrasena" name="contrasena" autocomplete="off" required>
+
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" autocomplete="off" required>
+
+        <label for="apellido">Apellido:</label>
+        <input type="text" id="apellido" name="apellido" autocomplete="off" required>
+
+        <label for="edad">Edad:</label>
+        <input type="text" id="edad" name="edad" autocomplete="off" required>
+
+        <button type="submit">Crear Cuenta</button>
+    </form>
+    <p>¿Ya tienes cuenta? <a href="/">Iniciar Sesión</a></p>
+</div>
+
+{% endblock principal %}
