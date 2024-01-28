@@ -7,3 +7,16 @@ services:
      - 5000:5000
     volumes:
      - ./python/src:/app/src
+    depends_on:
+     - bbdd
+    links:
+     - bbdd
+
+  bbdd:
+    build: ./postgres
+    ports:
+     - 5432:5432
+    volumes:
+     - ./postgres/datos_postgres:/var/lib/postgresql/data
+    environment:
+     POSTGRES_PASSWORD: password
