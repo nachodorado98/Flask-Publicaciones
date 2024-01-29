@@ -1,5 +1,6 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
+from typing import Optional
 
 from .confconexion import *
 
@@ -49,3 +50,51 @@ class Conexion:
 		usuario=self.c.fetchone()
 
 		return False if usuario is None else True
+
+	# Metodo para obtener la contrasena de un usuario
+	def obtenerContrasenaUsuario(self, usuario:str)->Optional[str]:
+
+		self.c.execute("""SELECT contrasena
+						FROM usuarios
+						WHERE usuario=%s""",
+						(usuario,))
+
+		contrasena=self.c.fetchone()
+
+		return None if contrasena is None else contrasena["contrasena"]
+
+	# Metodo para obtener el id de un usuario
+	def obtenerIdUsuario(self, usuario:str)->Optional[int]:
+
+		self.c.execute("""SELECT id
+						FROM usuarios
+						WHERE usuario=%s""",
+						(usuario,))
+
+		id_usuario=self.c.fetchone()
+
+		return None if id_usuario is None else id_usuario["id"]
+
+	# Metodo para comprobar si existe el id
+	def existe_id(self, id_usuario:int)->bool:
+
+		self.c.execute("""SELECT *
+						FROM usuarios
+						WHERE id=%s""",
+						(id_usuario,))
+
+		id_usuario_obtenido=self.c.fetchone()
+
+		return False if id_usuario_obtenido is None else True
+
+	# Metodo para obtener el nombre de usuario de un usuario
+	def obtenerNombreUsuarioUsuario(self, id_usuario:int)->Optional[str]:
+
+		self.c.execute("""SELECT usuario
+						FROM usuarios
+						WHERE id=%s""",
+						(id_usuario,))
+
+		usuario=self.c.fetchone()
+
+		return None if usuario is None else usuario["usuario"]

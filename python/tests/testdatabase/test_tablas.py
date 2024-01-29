@@ -58,3 +58,67 @@ def test_existe_usuario_existen_existente(conexion):
 	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
 
 	assert conexion.existe_usuario("nacho98")
+
+def test_obtener_contrasena_usuario_no_existen(conexion):
+
+	assert conexion.obtenerContrasenaUsuario("nacho98") is None
+
+def test_obtener_contrasena_usuario_existen(conexion):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	assert conexion.obtenerContrasenaUsuario("nacho98")=="1234"
+
+def test_obtener_id_usuario_no_existen(conexion):
+
+	assert conexion.obtenerIdUsuario("nacho98") is None
+
+def test_obtener_id_usuario_existen(conexion):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	assert conexion.obtenerIdUsuario("nacho98")==id_usuario
+
+def test_id_usuario_no_existen(conexion):
+
+	assert not conexion.existe_id(0)
+
+def test_id_usuario_existen_no_existente(conexion):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	assert not conexion.existe_id(1)
+
+def test_usuario_existen_existente(conexion):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	assert conexion.existe_id(id_usuario)
+
+def test_obtener_nombre_usuario_usuario_no_existen(conexion):
+
+	assert conexion.obtenerNombreUsuarioUsuario(0) is None
+
+def test_obtener_nombre_usuario_usuario_existe(conexion):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	assert conexion.obtenerNombreUsuarioUsuario(id_usuario)=="nacho98"
