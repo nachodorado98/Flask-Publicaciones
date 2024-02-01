@@ -1,6 +1,6 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from typing import Optional
+from typing import Optional, List
 
 from .confconexion import *
 
@@ -98,3 +98,25 @@ class Conexion:
 		usuario=self.c.fetchone()
 
 		return None if usuario is None else usuario["usuario"]
+
+	# Metodo para insertar una publicacion
+	def insertarPublicacion(self, id_usuario:int, titulo:str, descripcion:str)->None:
+
+		self.c.execute("""INSERT INTO publicaciones (id_usuario, titulo, descripcion)
+						VALUES (%s, %s, %s);""",
+						(id_usuario, titulo, descripcion))
+
+		self.confirmar()
+
+	# Metodo para obtener las publicaciones
+	def obtenerPublicaciones(self)->Optional[List[tuple]]:
+
+		self.c.execute("""SELECT p.id, p.titulo, p.descripcion, u.usuario, TO_CHAR(p.fecha_publicacion, 'HH24:MI DD-MM-YYYY') as fecha
+						FROM usuarios u
+						JOIN publicaciones p
+						ON u.id=p.id_usuario
+						ORDER BY p.fecha_publicacion DESC""")
+
+		publicaciones=self.c.fetchall()
+
+		return list(map(lambda publicacion: (publicacion["id"], publicacion["titulo"], publicacion["descripcion"], publicacion["usuario"], publicacion["fecha"]), publicaciones)) if publicaciones else None

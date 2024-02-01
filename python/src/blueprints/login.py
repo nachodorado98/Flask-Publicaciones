@@ -1,4 +1,4 @@
-from flask import Blueprint, request, redirect
+from flask import Blueprint, request, redirect, render_template
 from flask_login import login_user, login_required, current_user, logout_user
 from typing import Optional
 
@@ -67,14 +67,20 @@ def login():
 
 	siguiente=request.args.get("next")
 
-	return redirect(siguiente or "/inicio")
+	return redirect(siguiente or "/publicaciones")
 
 
-@bp_login.route("/inicio")
+@bp_login.route("/publicaciones")
 @login_required
-def pagina_inicio():
+def pagina_publicaciones():
 
-	return f"Bienvenido de nuevo: {current_user.username}"
+	con=Conexion()
+
+	publicaciones=con.obtenerPublicaciones()
+
+	con.cerrarConexion()
+
+	return render_template("publicaciones.html", usuario=current_user.username, publicaciones=publicaciones)
 
 
 @bp_login.route("/logout")

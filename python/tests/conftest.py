@@ -28,6 +28,8 @@ def conexion():
 
 	con.c.execute("DELETE FROM usuarios")
 
+	con.c.execute("DELETE FROM publicaciones")
+
 	con.confirmar()
 
 	return con
