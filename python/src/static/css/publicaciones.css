@@ -1,3 +1,5 @@
+/*------------------------------------------------------PUBLICACIONES-----------------------------------------------*/
+
 body {
     margin: 0;
     padding: 0;
@@ -164,4 +166,54 @@ footer {
     font-size: 14px;
     opacity: 0.8;
     letter-spacing: 1px;
+}
+
+/*------------------------------------------------------ANADIR PUBLICACION-----------------------------------------------*/
+
+.contenedor {
+    max-width: 400px;
+    margin: 40px auto;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.contenedor h1 {
+    color: #333;
+    font-size: 32px;
+}
+
+.contenedor form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contenedor label {
+    margin-top: 10px;
+    color: #555;
+}
+
+.contenedor input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    box-sizing: border-box;
+}
+
+.contenedor button {
+    background-color: #3897f0;
+    color: #fff;
+    padding: 10px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.contenedor button:hover {
+    background-color: #2674c6;
 }

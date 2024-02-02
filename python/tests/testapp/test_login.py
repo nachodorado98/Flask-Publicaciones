@@ -1,4 +1,5 @@
 import pytest
+from flask_login import current_user
 
 def test_pagina_publicaciones_sin_login(cliente):
 
@@ -70,3 +71,22 @@ def test_pagina_publicaciones_con_login_con_publicaciones(cliente, conexion):
 	assert "Nadie ha publicado aun...¡Se el primero en publicar!" not in contenido
 	assert "<h2>Titulo</h2>" in contenido
 	assert "Descripcion" in contenido
+
+def test_pagina_logout(cliente, conexion):
+
+	with cliente as cliente_abierto:
+
+		cliente_abierto.post("/singin", data={"nombre":"nacho", "apellido":"dorado", "usuario":"nacho98", "contrasena":"NachoDorado1998&", "edad":25})
+
+		cliente_abierto.post("/login", data={"usuario": "nacho98", "contrasena": "NachoDorado1998&"})
+
+		assert current_user.is_authenticated
+
+		respuesta=cliente_abierto.get('/logout', follow_redirects=True)
+
+		contenido=respuesta.data.decode()
+
+		assert not current_user.is_authenticated
+
+		assert respuesta.status_code==200
+		assert "<h1>Iniciar Sesión</h1>" in contenido

@@ -1,0 +1,25 @@
+{% extends "publicaciones.html" %}
+
+{% block titulo %}
+
+{% endblock titulo %}
+
+
+{% block principal %}
+
+<div class="contenedor">
+    <h1>Nueva Publicacion</h1>
+    <form id="formulario" method="POST" action="#" autocomplete="off">
+
+        <label for="titulo">Titulo:</label>
+        <input type="text" id="titulo" name="titulo" autocomplete="off" required>
+
+        <label for="descripcion">Descripcion:</label>
+        <input type="text" id="descripcion" name="descripcion" autocomplete="off" required>
+
+        <button type="submit">Añadir Publicacion</button>
+        <button type="button" onclick="window.location.href='/publicaciones'">Cancelar</button>
+    </form>
+</div>
+
+{% endblock principal %}
