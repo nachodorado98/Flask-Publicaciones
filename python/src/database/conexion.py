@@ -1,6 +1,6 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 from .confconexion import *
 
@@ -116,6 +116,52 @@ class Conexion:
 						JOIN publicaciones p
 						ON u.id=p.id_usuario
 						ORDER BY p.fecha_publicacion DESC""")
+
+		publicaciones=self.c.fetchall()
+
+		return list(map(lambda publicacion: (publicacion["id"], publicacion["titulo"], publicacion["descripcion"], publicacion["usuario"], publicacion["fecha"]), publicaciones)) if publicaciones else None
+
+	# Metodo para obtener datos del perfil del usuario
+	def obtenerPerfil(self, id_usuario:int)->Optional[tuple]:
+
+		self.c.execute("""SELECT nombre, apellido, edad
+						FROM usuarios
+						WHERE id=%s""",
+						(id_usuario,))
+
+		perfil=self.c.fetchone()
+
+		# Funcion para limpiar los datos del perfil
+		def limpiarDatos(datos:Dict)->tuple:
+
+			nombre=datos["nombre"]
+
+			apellido=datos["apellido"]
+
+			return (nombre+" "+apellido, datos["edad"])
+
+		return None if perfil is None else limpiarDatos(perfil)
+
+	# Metodo para obtener el numero de publicaciones de un usuario
+	def numero_publicaciones(self, id_usuario:int)->int:
+
+		self.c.execute("""SELECT count(1) as numero_publicaciones
+						FROM publicaciones
+						WHERE id_usuario=%s""",
+						(id_usuario,))
+
+		return self.c.fetchone()["numero_publicaciones"]
+
+	# Metodo para obtener las publicaciones de un usuario
+	def publicaciones_usuario(self, id_usuario:int)->Optional[List[tuple]]:
+
+		self.c.execute("""SELECT p.id, p.titulo, p.descripcion, u.usuario, TO_CHAR(p.fecha_publicacion, 'HH24:MI DD-MM-YYYY') as fecha
+						FROM usuarios u
+						JOIN publicaciones p
+						ON u.id=p.id_usuario
+						WHERE p.id_usuario=%s
+						ORDER BY p.fecha_publicacion DESC""",
+						(id_usuario,))
 
 		publicaciones=self.c.fetchall()
 

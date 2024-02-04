@@ -1,0 +1,46 @@
+{% extends "publicaciones.html" %}
+
+{% block titulo %}
+
+{% endblock titulo %}
+
+
+{% block principal %}
+
+<div class="contenedor-perfil">
+    <h1>{{ usuario.upper() }}</h1>
+    <p><strong>Nombre:</strong> {{ nombre_apellido.upper() }}</p>
+    <p><strong>Edad:</strong> {{ edad }} años</p>
+    <p><strong>Numero de Publicaciones:</strong> {{ numero_publicaciones }}</p>
+</div>
+
+
+{% if publicaciones_usuario %}
+
+    <div class="tarjetas-perfil">
+
+        {% for publicacion in publicaciones_usuario %}
+
+            <div class="tarjeta-perfil">
+                <h2>{{ publicacion[1] }}</h2>
+                <p class="descripcion">{{ publicacion[2] }}</p>
+                <p class="usuario">{{ publicacion[3] }}</p>
+                <p class="fecha">{{ publicacion[4] }}</p>
+                <a href="#" class="btn-me-gusta-perfil">Me gusta</a>
+                <a href="#" class="btn-ver-comentarios-perfil">Ver Comentarios</a>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% else %}
+
+    <div class="contenedor-no-publicaciones-perfil">
+        <p class="mensaje-no-publicaciones-perfil">No has publicado nada aun...¡Publica!</p>
+        <a href="/anadir_publicacion" class="nueva-publicacion-button-perfil">Realizar Nueva Publicacion</a>
+    </div>
+    
+{% endif %}
+
+{% endblock principal %}

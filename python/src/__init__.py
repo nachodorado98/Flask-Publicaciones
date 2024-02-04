@@ -4,6 +4,7 @@ from .blueprints.inicio import bp_inicio
 from .blueprints.registro import bp_registro
 from .blueprints.login import bp_login
 from .blueprints.anadir_publicacion import bp_anadir_publicacion
+from .blueprints.perfil import bp_perfil
 
 from .extensiones.manager import login_manager
 
@@ -21,5 +22,6 @@ def crear_app(configuracion:object)->Flask:
 	app.register_blueprint(bp_registro)
 	app.register_blueprint(bp_login)
 	app.register_blueprint(bp_anadir_publicacion)
+	app.register_blueprint(bp_perfil)
 
 	return app

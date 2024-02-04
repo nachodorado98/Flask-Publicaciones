@@ -95,7 +95,7 @@ def test_id_usuario_existen_no_existente(conexion):
 
 	assert not conexion.existe_id(1)
 
-def test_usuario_existen_existente(conexion):
+def test_id_usuario_existen_existente(conexion):
 
 	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
 
@@ -222,3 +222,199 @@ def test_obtener_publicaciones_existen(conexion, numero_publicaciones):
 
 	assert len(publicaciones)==numero_publicaciones
 	assert publicaciones[0][0]>publicaciones[-1][0]
+
+def test_obtener_datos_perfil_no_existen(conexion):
+
+	assert conexion.obtenerPerfil(0) is None
+
+def test_obtener_datos_perfil_existen_no_existente(conexion):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	assert conexion.obtenerPerfil(1) is None
+
+def test_obtener_datos_perfil_existen_existente(conexion):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	assert conexion.obtenerPerfil(id_usuario)==("nacho dorado", 25)
+
+def test_numero_publicaciones_no_existe_usuario(conexion):
+
+	assert conexion.numero_publicaciones(0)==0
+
+def test_numero_publicaciones_existe_usuario_sin_publicaciones(conexion):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	assert conexion.numero_publicaciones(id_usuario)==0
+
+def test_numero_publicaciones_existe_usuario_con_publicacion(conexion):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	assert conexion.numero_publicaciones(id_usuario)==1
+
+@pytest.mark.parametrize(["numero_publicaciones"],
+	[(2,),(22,),(5,),(13,),(25,)]
+)
+def test_numero_publicaciones_existe_usuario_con_publicaciones(conexion, numero_publicaciones):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	for _ in range(numero_publicaciones):
+
+		conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	assert conexion.numero_publicaciones(id_usuario)==numero_publicaciones
+
+@pytest.mark.parametrize(["numero_publicaciones"],
+	[(2,),(22,),(5,),(13,),(25,)]
+)
+def test_numero_publicaciones_existe_usuario_con_publicaciones_varios_usuarios(conexion, numero_publicaciones):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios where usuario='nacho98'")
+
+	usuarios_nacho=conexion.c.fetchall()
+
+	id_usuario_nacho=usuarios_nacho[0]["id"]
+
+	for _ in range(numero_publicaciones):
+
+		conexion.insertarPublicacion(id_usuario_nacho, "Titulo", "Descripcion")
+
+	conexion.insertarUsuario("amanda99", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios where usuario='amanda99'")
+
+	usuarios_amanda=conexion.c.fetchall()
+
+	id_usuario_amanda=usuarios_amanda[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario_amanda, "Titulo", "Descripcion")
+	conexion.insertarPublicacion(id_usuario_amanda, "Titulo", "Descripcion")
+	conexion.insertarPublicacion(id_usuario_amanda, "Titulo", "Descripcion")
+
+	publicaciones=conexion.obtenerPublicaciones()
+
+	assert len(publicaciones)==numero_publicaciones+3
+	assert conexion.numero_publicaciones(id_usuario_nacho)==numero_publicaciones
+
+def test_publicaciones_usuario_no_existe_usuario(conexion):
+
+	assert conexion.publicaciones_usuario(0) is None
+
+def test_publicaciones_usuario_existe_usuario_sin_publicaciones(conexion):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	assert conexion.publicaciones_usuario(id_usuario) is None
+
+def test_publicaciones_usuario_existe_usuario_con_publicacion(conexion):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	publicaciones=conexion.publicaciones_usuario(id_usuario)
+
+	assert len(publicaciones)==1
+	assert publicaciones[0][3]=="nacho98"
+
+@pytest.mark.parametrize(["numero_publicaciones"],
+	[(2,),(22,),(5,),(13,),(25,)]
+)
+def test_publicaciones_usuario_existe_usuario_con_publicaciones(conexion, numero_publicaciones):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	for _ in range(numero_publicaciones):
+
+		conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	publicaciones=conexion.publicaciones_usuario(id_usuario)
+
+	assert len(publicaciones)==numero_publicaciones
+
+@pytest.mark.parametrize(["numero_publicaciones"],
+	[(2,),(22,),(5,),(13,),(25,)]
+)
+def test_publicaciones_usuario_existe_usuario_con_publicaciones_varios_usuarios(conexion, numero_publicaciones):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios where usuario='nacho98'")
+
+	usuarios_nacho=conexion.c.fetchall()
+
+	id_usuario_nacho=usuarios_nacho[0]["id"]
+
+	for _ in range(numero_publicaciones):
+
+		conexion.insertarPublicacion(id_usuario_nacho, "Titulo", "Descripcion")
+
+	conexion.insertarUsuario("amanda99", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios where usuario='amanda99'")
+
+	usuarios_amanda=conexion.c.fetchall()
+
+	id_usuario_amanda=usuarios_amanda[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario_amanda, "Titulo", "Descripcion")
+	conexion.insertarPublicacion(id_usuario_amanda, "Titulo", "Descripcion")
+	conexion.insertarPublicacion(id_usuario_amanda, "Titulo", "Descripcion")
+
+	publicaciones=conexion.obtenerPublicaciones()
+
+	assert len(publicaciones)==numero_publicaciones+3
+
+	publicaciones_nacho=conexion.publicaciones_usuario(id_usuario_nacho)
+
+	assert len(publicaciones_nacho)==numero_publicaciones

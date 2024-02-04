@@ -65,7 +65,7 @@ body {
 
 .tarjetas {
     margin-top: 20px;
-    max-height: 700px;
+    max-height: 490px;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #bdc3c7 #ecf0f1;
@@ -80,8 +80,8 @@ body {
     border: 1px solid #bdc3c7;
     border-radius: 10px;
     padding: 20px;
-    margin-bottom: 20px;
-    width: 80%;
+    margin-bottom: 10px;
+    width: 90%;
     text-align: center;
     position: relative;
 }
@@ -216,4 +216,122 @@ footer {
 
 .contenedor button:hover {
     background-color: #2674c6;
+}
+
+/*------------------------------------------------------PERFIL-----------------------------------------------*/
+
+.contenedor-perfil {
+    max-width: 800px;
+    background-color: #fff;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    height: 270px;
+}
+
+.contenedor-perfil h1 {
+    color: #333;
+    font-size: 32px;
+}
+
+.contenedor-perfil p {
+    background-color: #ecf0f1;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+.tarjetas-perfil {
+    margin-top: 20px;
+    max-height: 250px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #bdc3c7 #ecf0f1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 90px;
+}
+
+.tarjeta-perfil {
+    background-color: #ecf0f1;
+    border: 1px solid #bdc3c7;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 10px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+}
+
+.tarjeta-perfil h2 {
+    font-size: 28px;
+    margin-top: 40px;
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+.tarjeta-perfil .descripcion {
+    font-size: 20px;
+    margin-bottom: 50px;
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+.tarjeta-perfil .usuario {
+    position: absolute;
+    top: 0px;
+    left: 10px;
+    font-weight: bold;
+}
+
+.tarjeta-perfil .fecha {
+    position: absolute;
+    bottom: 0px;
+    right: 10px;
+    color: #555;
+}
+
+.btn-me-gusta-perfil, .btn-ver-comentarios-perfil {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-right: 10px;
+    text-decoration: none;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.btn-me-gusta-perfil:hover, .btn-ver-comentarios-perfil:hover {
+    background-color: #2980b9;
+}
+
+.mensaje-no-publicaciones-perfil {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    color: #333;
+    font-size: 22px;
+    text-align: center;
+}
+
+.nueva-publicacion-button-perfil {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-right: 10px;
+    text-decoration: none;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.nueva-publicacion-button-perfil:hover {
+    background-color: #2980b9;
 }
