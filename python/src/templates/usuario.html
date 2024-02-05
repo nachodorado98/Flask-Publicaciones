@@ -8,7 +8,7 @@
 {% block principal %}
 
 <div class="contenedor-perfil">
-    <h1>{{ usuario.upper() }}</h1>
+    <h1>{{ usuario_perfil.upper() }}</h1>
     <p><strong>Nombre:</strong> {{ nombre_apellido.upper() }}</p>
     <p><strong>Edad:</strong> {{ edad }} años</p>
     <p><strong>Numero de Publicaciones:</strong> {{ numero_publicaciones }}</p>
@@ -37,8 +37,7 @@
 {% else %}
 
     <div class="contenedor-no-publicaciones-perfil">
-        <p class="mensaje-no-publicaciones-perfil">No has publicado nada aun...¡Publica!</p>
-        <a href="/anadir_publicacion" class="nueva-publicacion-button-perfil">Realizar Nueva Publicacion</a>
+        <p class="mensaje-no-publicaciones-perfil">No hay ninguna publicacion de {{ usuario_perfil.upper() }}...</p>
     </div>
     
 {% endif %}

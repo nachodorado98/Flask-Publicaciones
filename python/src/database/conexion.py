@@ -111,7 +111,7 @@ class Conexion:
 	# Metodo para obtener las publicaciones
 	def obtenerPublicaciones(self)->Optional[List[tuple]]:
 
-		self.c.execute("""SELECT p.id, p.titulo, p.descripcion, u.usuario, TO_CHAR(p.fecha_publicacion, 'HH24:MI DD-MM-YYYY') as fecha
+		self.c.execute("""SELECT p.id, p.titulo, p.descripcion, u.usuario, TO_CHAR(p.fecha_publicacion, 'HH24:MI DD-MM-YYYY') as fecha, u.id as id_usuario
 						FROM usuarios u
 						JOIN publicaciones p
 						ON u.id=p.id_usuario
@@ -119,7 +119,7 @@ class Conexion:
 
 		publicaciones=self.c.fetchall()
 
-		return list(map(lambda publicacion: (publicacion["id"], publicacion["titulo"], publicacion["descripcion"], publicacion["usuario"], publicacion["fecha"]), publicaciones)) if publicaciones else None
+		return list(map(lambda publicacion: (publicacion["id"], publicacion["titulo"], publicacion["descripcion"], publicacion["usuario"], publicacion["fecha"], publicacion["id_usuario"]), publicaciones)) if publicaciones else None
 
 	# Metodo para obtener datos del perfil del usuario
 	def obtenerPerfil(self, id_usuario:int)->Optional[tuple]:
@@ -155,7 +155,7 @@ class Conexion:
 	# Metodo para obtener las publicaciones de un usuario
 	def publicaciones_usuario(self, id_usuario:int)->Optional[List[tuple]]:
 
-		self.c.execute("""SELECT p.id, p.titulo, p.descripcion, u.usuario, TO_CHAR(p.fecha_publicacion, 'HH24:MI DD-MM-YYYY') as fecha
+		self.c.execute("""SELECT p.id, p.titulo, p.descripcion, u.usuario, TO_CHAR(p.fecha_publicacion, 'HH24:MI DD-MM-YYYY') as fecha, u.id as id_usuario
 						FROM usuarios u
 						JOIN publicaciones p
 						ON u.id=p.id_usuario
@@ -165,4 +165,4 @@ class Conexion:
 
 		publicaciones=self.c.fetchall()
 
-		return list(map(lambda publicacion: (publicacion["id"], publicacion["titulo"], publicacion["descripcion"], publicacion["usuario"], publicacion["fecha"]), publicaciones)) if publicaciones else None
+		return list(map(lambda publicacion: (publicacion["id"], publicacion["titulo"], publicacion["descripcion"], publicacion["usuario"], publicacion["fecha"], publicacion["id_usuario"]), publicaciones)) if publicaciones else None
