@@ -166,3 +166,37 @@ class Conexion:
 		publicaciones=self.c.fetchall()
 
 		return list(map(lambda publicacion: (publicacion["id"], publicacion["titulo"], publicacion["descripcion"], publicacion["usuario"], publicacion["fecha"], publicacion["id_usuario"]), publicaciones)) if publicaciones else None
+
+	# Metodo para comprobar si existe el id de la publicacion
+	def existe_id_publicacion(self, id_publicacion:int)->bool:
+
+		self.c.execute("""SELECT *
+						FROM publicaciones
+						WHERE id=%s""",
+						(id_publicacion,))
+
+		id_publicacion_obtenido=self.c.fetchone()
+
+		return False if id_publicacion_obtenido is None else True
+
+	# Metodo para dar like a una publicacion
+	def darLike(self, id_usuario:int, id_publicacion:int)->None:
+
+		self.c.execute("""INSERT INTO likes (id_usuario, id_publicacion)
+						VALUES (%s, %s);""",
+						(id_usuario, id_publicacion))
+
+		self.confirmar()
+
+	# Metodo para saber si se ha dado like a una publicacion por parte de un usuario
+	def like_dado(self, id_usuario:int, id_publicacion:int)->bool:
+
+		self.c.execute("""SELECT *
+						FROM likes
+						WHERE id_usuario=%s
+						AND id_publicacion=%s""",
+						(id_usuario, id_publicacion))
+
+		like=self.c.fetchone()
+
+		return False if like is None else True

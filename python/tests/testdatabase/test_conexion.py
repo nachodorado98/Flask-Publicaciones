@@ -9,7 +9,8 @@ def test_conexion(conexion):
 	tablas=[tabla["relname"] for tabla in conexion.c.fetchall()]
 
 	assert "usuarios" in tablas 
-	assert "publicaciones" in tablas 
+	assert "publicaciones" in tablas
+	assert "likes" in tablas
 
 def test_cerrar_conexion(conexion):
 

@@ -15,3 +15,9 @@ CREATE TABLE publicaciones (id SERIAL PRIMARY KEY,
 						    descripcion TEXT,
 						    fecha_publicacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 						    FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE);
+
+CREATE TABLE likes (id SERIAL PRIMARY KEY,
+				    id_usuario INTEGER,
+				    id_publicacion INTEGER,
+				    FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE,
+				    FOREIGN KEY (id_publicacion) REFERENCES publicaciones(id) ON DELETE CASCADE);

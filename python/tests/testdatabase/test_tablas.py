@@ -418,3 +418,176 @@ def test_publicaciones_usuario_existe_usuario_con_publicaciones_varios_usuarios(
 	publicaciones_nacho=conexion.publicaciones_usuario(id_usuario_nacho)
 
 	assert len(publicaciones_nacho)==numero_publicaciones
+
+def test_tabla_likes_vacia(conexion):
+
+	conexion.c.execute("SELECT * FROM likes")
+
+	assert not conexion.c.fetchall()
+
+def test_id_publicacion_no_existen(conexion):
+
+	assert not conexion.existe_id_publicacion(0)
+
+def test_id_publicacion_existen_no_existente(conexion):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	assert not conexion.existe_id_publicacion(1)
+
+def test_id_publicacion_existen_existente(conexion):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	conexion.c.execute("SELECT * FROM publicaciones")
+
+	publicaciones=conexion.c.fetchall()
+
+	id_publicacion=publicaciones[0]["id"]
+
+	assert conexion.existe_id_publicacion(id_publicacion)
+
+def test_insertar_like(conexion):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	conexion.c.execute("SELECT * FROM publicaciones")
+
+	publicaciones=conexion.c.fetchall()
+
+	id_publicacion=publicaciones[0]["id"]
+
+	conexion.darLike(id_usuario, id_publicacion)
+
+	conexion.c.execute("SELECT * FROM likes")
+
+	likes=conexion.c.fetchall()
+
+	assert len(likes)==1
+	assert likes[0]["id_usuario"]==id_usuario
+	assert likes[0]["id_publicacion"]==id_publicacion
+
+@pytest.mark.parametrize(["numero_likes"],
+	[(2,),(22,),(5,),(13,),(25,)]
+)
+def test_insertar_likes(conexion, numero_likes):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	conexion.c.execute("SELECT * FROM publicaciones")
+
+	publicaciones=conexion.c.fetchall()
+
+	id_publicacion=publicaciones[0]["id"]
+
+	for _ in range(numero_likes):
+
+		conexion.darLike(id_usuario, id_publicacion)
+
+	conexion.c.execute("SELECT * FROM likes")
+
+	likes=conexion.c.fetchall()
+
+	assert len(likes)==numero_likes
+
+def test_like_dado_no_existen(conexion):
+
+	assert not conexion.like_dado(1, 1)
+
+def test_like_dado_existen_no_like(conexion):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	conexion.c.execute("SELECT * FROM publicaciones")
+
+	publicaciones=conexion.c.fetchall()
+
+	id_publicacion=publicaciones[0]["id"]
+
+	assert not conexion.like_dado(id_usuario, id_publicacion)
+
+def test_like_dado_existen_like(conexion):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	conexion.c.execute("SELECT * FROM publicaciones")
+
+	publicaciones=conexion.c.fetchall()
+
+	id_publicacion=publicaciones[0]["id"]
+
+	conexion.darLike(id_usuario, id_publicacion)
+
+	assert conexion.like_dado(id_usuario, id_publicacion)
+
+def test_like_dado_existen_likes(conexion):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	conexion.c.execute("SELECT * FROM publicaciones")
+
+	publicaciones=conexion.c.fetchall()
+
+	id_publicacion=publicaciones[0]["id"]
+
+	for _ in range(5):
+
+		conexion.darLike(id_usuario, id_publicacion)
+
+	assert conexion.like_dado(id_usuario, id_publicacion)
