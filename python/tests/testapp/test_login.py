@@ -72,6 +72,57 @@ def test_pagina_publicaciones_con_login_con_publicaciones(cliente, conexion):
 	assert "<h2>Titulo</h2>" in contenido
 	assert "Descripcion" in contenido
 
+def test_pagina_publicaciones_con_login_con_publicacion_sin_like(cliente, conexion):
+
+	cliente.post("/singin", data={"nombre":"nacho", "apellido":"dorado", "usuario":"nacho98", "contrasena":"NachoDorado1998&", "edad":25})
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	respuesta=cliente.post("/login", data={"usuario": "nacho98", "contrasena": "NachoDorado1998&"}, follow_redirects=True)
+
+	contenido=respuesta.data.decode()
+
+	assert respuesta.status_code==200
+	assert "0" in contenido
+
+@pytest.mark.parametrize(["likes"],
+	[(2,),(22,),(5,),(13,),(25,)]
+)
+def test_pagina_publicaciones_con_login_con_publicacion_con_likes(cliente, conexion, likes):
+
+	cliente.post("/singin", data={"nombre":"nacho", "apellido":"dorado", "usuario":"nacho98", "contrasena":"NachoDorado1998&", "edad":25})
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	conexion.c.execute("SELECT * FROM publicaciones")
+
+	publicaciones=conexion.c.fetchall()
+
+	id_publicacion=publicaciones[0]["id"]
+
+	for _ in range(likes):
+
+		conexion.darLike(id_usuario, id_publicacion)
+
+	respuesta=cliente.post("/login", data={"usuario": "nacho98", "contrasena": "NachoDorado1998&"}, follow_redirects=True)
+
+	contenido=respuesta.data.decode()
+
+	assert respuesta.status_code==200
+	assert f"{likes}" in contenido
+
 def test_pagina_logout(cliente, conexion):
 
 	with cliente as cliente_abierto:

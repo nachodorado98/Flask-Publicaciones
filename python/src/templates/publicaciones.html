@@ -42,8 +42,16 @@
                         <p class="descripcion">{{ publicacion[2] }}</p>
                         <a href="/usuario/{{ publicacion[5] }}" class="usuario">{{ publicacion[3] }}</a>
                         <p class="fecha">{{ publicacion[4] }}</p>
-                        <a href="/dar_like/{{ publicacion[0] }}" class="btn-me-gusta">Me gusta</a>
-                        <a href="#" class="btn-ver-comentarios">Ver Comentarios</a>
+                        <div class="contenedor-acciones">
+                            <p class="likes">{{ publicacion[6] }}</p>
+                            <a href="/dar_like/{{ publicacion[0] }}" class="btn-me-gusta">
+                                <img src="{{ url_for('static', filename='imagenes/like.png') }}" alt="Me gusta" width="22" height="22">
+                            </a>
+                            <p class="comentarios">0</p>
+                            <a href="#" class="btn-ver-comentarios">
+                                <img src="{{ url_for('static', filename='imagenes/comentario.png') }}" alt="Comentario" width="22" height="22">
+                            </a>
+                        </div>
                     </div>
 
                 {% endfor %}

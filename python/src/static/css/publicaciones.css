@@ -116,20 +116,32 @@ body {
     color: #555;
 }
 
-.btn-me-gusta, .btn-ver-comentarios {
-    background-color: #3498db;
-    color: #fff;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-right: 10px;
-    text-decoration: none;
-    transition: background-color 0.3s ease-in-out;
+.contenedor-acciones {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
 }
 
-.btn-me-gusta:hover, .btn-ver-comentarios:hover {
-    background-color: #2980b9;
+.tarjeta .likes {
+    margin-right: 10px;
+    color: #555;
+    font-size: 20px;
+}
+
+.tarjeta .comentarios {
+    margin-right: 10px;
+    margin-left: 40px;
+    color: #555;
+    font-size: 20px;
+}
+
+.btn-me-gusta .btn-ver-comentarios img {
+    margin-right: 30px;
+}
+
+.btn-me-gusta:hover .btn-ver-comentarios:hover {
+    transform: scale(1.1);
 }
 
 .mensaje-no-publicaciones {
@@ -300,20 +312,40 @@ footer {
     color: #555;
 }
 
-.btn-me-gusta-perfil, .btn-ver-comentarios-perfil {
-    background-color: #3498db;
-    color: #fff;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-right: 10px;
-    text-decoration: none;
-    transition: background-color 0.3s ease-in-out;
+.contenedor-acciones {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
 }
 
-.btn-me-gusta-perfil:hover, .btn-ver-comentarios-perfil:hover {
-    background-color: #2980b9;
+.tarjeta-perfil .likes {
+    margin-right: 10px;
+    color: #555;
+    font-size: 20px;
+}
+
+.tarjeta-perfil .comentarios {
+    margin-right: 10px;
+    margin-left: 40px;
+    color: #555;
+    font-size: 20px;
+}
+
+.tarjeta-perfil .btn-me-gusta img {
+    margin-right: 10px;
+}
+
+.tarjeta-perfil .btn-me-gusta:hover {
+    transform: scale(1.1);
+}
+
+.tarjeta-perfil .btn-ver-comentarios-perfil img {
+    margin-right: 10px;
+}
+
+.tarjeta-perfil .btn-ver-comentarios-perfil:hover {
+    transform: scale(1.1);
 }
 
 .mensaje-no-publicaciones-perfil {

@@ -111,15 +111,19 @@ class Conexion:
 	# Metodo para obtener las publicaciones
 	def obtenerPublicaciones(self)->Optional[List[tuple]]:
 
-		self.c.execute("""SELECT p.id, p.titulo, p.descripcion, u.usuario, TO_CHAR(p.fecha_publicacion, 'HH24:MI DD-MM-YYYY') as fecha, u.id as id_usuario
-						FROM usuarios u
-						JOIN publicaciones p
-						ON u.id=p.id_usuario
-						ORDER BY p.fecha_publicacion DESC""")
+		self.c.execute("""SELECT pub.*, COUNT(l.id_publicacion) AS likes
+							FROM (SELECT p.id, p.titulo, p.descripcion, u.usuario, TO_CHAR(p.fecha_publicacion, 'HH24:MI DD-MM-YYYY') as fecha, p.fecha_publicacion, u.id as id_usuario
+							    	FROM usuarios u
+							    	JOIN publicaciones p
+							    	ON u.id=p.id_usuario) pub
+							LEFT JOIN likes l
+							ON pub.id=l.id_publicacion
+							GROUP BY pub.id, pub.titulo, pub.descripcion, pub.usuario, pub.fecha, pub.fecha_publicacion, pub.id_usuario
+							ORDER BY pub.fecha_publicacion DESC""")
 
 		publicaciones=self.c.fetchall()
 
-		return list(map(lambda publicacion: (publicacion["id"], publicacion["titulo"], publicacion["descripcion"], publicacion["usuario"], publicacion["fecha"], publicacion["id_usuario"]), publicaciones)) if publicaciones else None
+		return list(map(lambda publicacion: (publicacion["id"], publicacion["titulo"], publicacion["descripcion"], publicacion["usuario"], publicacion["fecha"], publicacion["id_usuario"], publicacion["likes"]), publicaciones)) if publicaciones else None
 
 	# Metodo para obtener datos del perfil del usuario
 	def obtenerPerfil(self, id_usuario:int)->Optional[tuple]:
@@ -155,17 +159,21 @@ class Conexion:
 	# Metodo para obtener las publicaciones de un usuario
 	def publicaciones_usuario(self, id_usuario:int)->Optional[List[tuple]]:
 
-		self.c.execute("""SELECT p.id, p.titulo, p.descripcion, u.usuario, TO_CHAR(p.fecha_publicacion, 'HH24:MI DD-MM-YYYY') as fecha, u.id as id_usuario
-						FROM usuarios u
-						JOIN publicaciones p
-						ON u.id=p.id_usuario
-						WHERE p.id_usuario=%s
-						ORDER BY p.fecha_publicacion DESC""",
+		self.c.execute("""SELECT pub.*, COUNT(l.id_publicacion) AS likes
+							FROM (SELECT p.id, p.titulo, p.descripcion, u.usuario, TO_CHAR(p.fecha_publicacion, 'HH24:MI DD-MM-YYYY') as fecha, p.fecha_publicacion, u.id as id_usuario
+							    	FROM usuarios u
+							    	JOIN publicaciones p
+							    	ON u.id=p.id_usuario
+							    	WHERE p.id_usuario=%s) pub
+							LEFT JOIN likes l
+							ON pub.id=l.id_publicacion
+							GROUP BY pub.id, pub.titulo, pub.descripcion, pub.usuario, pub.fecha, pub.fecha_publicacion, pub.id_usuario
+							ORDER BY pub.fecha_publicacion DESC""",
 						(id_usuario,))
 
 		publicaciones=self.c.fetchall()
 
-		return list(map(lambda publicacion: (publicacion["id"], publicacion["titulo"], publicacion["descripcion"], publicacion["usuario"], publicacion["fecha"], publicacion["id_usuario"]), publicaciones)) if publicaciones else None
+		return list(map(lambda publicacion: (publicacion["id"], publicacion["titulo"], publicacion["descripcion"], publicacion["usuario"], publicacion["fecha"], publicacion["id_usuario"], publicacion["likes"]), publicaciones)) if publicaciones else None
 
 	# Metodo para comprobar si existe el id de la publicacion
 	def existe_id_publicacion(self, id_publicacion:int)->bool:
