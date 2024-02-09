@@ -11,6 +11,7 @@ def test_conexion(conexion):
 	assert "usuarios" in tablas 
 	assert "publicaciones" in tablas
 	assert "likes" in tablas
+	assert "comentarios" in tablas
 
 def test_cerrar_conexion(conexion):
 

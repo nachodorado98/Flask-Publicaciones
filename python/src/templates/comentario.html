@@ -1,0 +1,22 @@
+{% extends "publicaciones.html" %}
+
+{% block titulo %}
+
+{% endblock titulo %}
+
+
+{% block principal %}
+
+<div class="contenedor">
+    <h1>Nuevo Comentario</h1>
+    <form id="formulario" method="POST" action="/insertar_comentario/{{ id_publicacion }}" autocomplete="off">
+
+    	<label for="comentario">Comentario:</label>
+        <input type="text" id="comentario" name="comentario" autocomplete="off" required>
+
+        <button type="submit">Comentar</button>
+        <button type="button" onclick="window.location.href='/publicaciones'">Cancelar</button>
+    </form>
+</div>
+
+{% endblock principal %}

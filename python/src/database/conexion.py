@@ -208,3 +208,12 @@ class Conexion:
 		like=self.c.fetchone()
 
 		return False if like is None else True
+
+	# Metodo para insertar un comentario de una publicacion
+	def insertarComentario(self, id_usuario:int, id_publicacion:int, comentario:str)->None:
+
+		self.c.execute("""INSERT INTO comentarios (id_usuario, id_publicacion, comentario)
+						VALUES (%s, %s, %s);""",
+						(id_usuario, id_publicacion, comentario))
+
+		self.confirmar()
