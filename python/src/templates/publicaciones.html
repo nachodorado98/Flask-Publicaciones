@@ -47,7 +47,7 @@
                             <a href="/dar_like/{{ publicacion[0] }}" class="btn-me-gusta">
                                 <img src="{{ url_for('static', filename='imagenes/like.png') }}" alt="Me gusta" width="22" height="22">
                             </a>
-                            <p class="comentarios">0</p>
+                            <p class="comentarios">{{ publicacion[7] }}</p>
                             <a href="/comentar/{{ publicacion[0] }}" class="btn-ver-comentarios">
                                 <img src="{{ url_for('static', filename='imagenes/comentario.png') }}" alt="Comentario" width="22" height="22">
                             </a>

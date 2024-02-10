@@ -73,7 +73,7 @@ def test_pagina_perfil_con_login_con_publicaciones(cliente, conexion, numero_pub
 		assert "<h2>Titulo</h2>" in contenido
 		assert "Descripcion" in contenido
 
-def test_pagina_perfil_con_login_con_publicacion_sin_like(cliente, conexion):
+def test_pagina_perfil_con_login_con_publicacion_sin_likes_sin_comentarios(cliente, conexion):
 
 	with cliente as cliente_abierto:
 
@@ -88,12 +88,13 @@ def test_pagina_perfil_con_login_con_publicacion_sin_like(cliente, conexion):
 		contenido=respuesta.data.decode()
 
 		assert respuesta.status_code==200
-		assert "0" in contenido
+		assert '<p class="likes">0</p>' in contenido
+		assert '<p class="comentarios">0</p>' in contenido
 
 @pytest.mark.parametrize(["likes"],
 	[(2,),(22,),(5,),(13,),(25,)]
 )
-def test_pagina_perfil_con_login_con_publicacion_con_likes(cliente, conexion, likes):
+def test_pagina_perfil_con_login_con_publicacion_con_likes_sin_comentarios(cliente, conexion, likes):
 
 	cliente.post("/singin", data={"nombre":"nacho", "apellido":"dorado", "usuario":"nacho98", "contrasena":"NachoDorado1998&", "edad":25})
 
@@ -124,4 +125,89 @@ def test_pagina_perfil_con_login_con_publicacion_con_likes(cliente, conexion, li
 		contenido=respuesta.data.decode()
 
 		assert respuesta.status_code==200
-		assert f"{likes}" in contenido
+		assert f'<p class="likes">{likes}</p>' in contenido
+		assert '<p class="comentarios">0</p>' in contenido
+
+@pytest.mark.parametrize(["comentarios"],
+	[(2,),(22,),(5,),(13,),(25,)]
+)
+def test_pagina_perfil_con_login_con_publicacion_sin_likes_con_comentarios(cliente, conexion, comentarios):
+
+	cliente.post("/singin", data={"nombre":"nacho", "apellido":"dorado", "usuario":"nacho98", "contrasena":"NachoDorado1998&", "edad":25})
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	with cliente as cliente_abierto:
+
+		cliente_abierto.post("/login", data={"usuario": "nacho98", "contrasena": "NachoDorado1998&"})
+
+		cliente_abierto.post("/insertar_publicacion", data={"titulo":"Titulo", "descripcion":"Descripcion"})
+
+		conexion.c.execute("SELECT * FROM publicaciones")
+
+		publicaciones=conexion.c.fetchall()
+
+		id_publicacion=publicaciones[0]["id"]
+
+		for _ in range(comentarios):
+
+			conexion.insertarComentario(id_usuario, id_publicacion, "Comentario")
+
+		respuesta=cliente_abierto.get("/me")
+
+		contenido=respuesta.data.decode()
+
+		assert respuesta.status_code==200
+		assert '<p class="likes">0</p>' in contenido
+		assert f'<p class="comentarios">{comentarios}</p>' in contenido
+
+@pytest.mark.parametrize(["likes", "comentarios"],
+	[
+		(2, 13),
+		(22, 13),
+		(5, 1),
+		(13, 5),
+		(25, 25)
+	]
+)
+def test_pagina_perfil_con_login_con_publicacion_con_likes_con_comentarios(cliente, conexion, likes, comentarios):
+
+	cliente.post("/singin", data={"nombre":"nacho", "apellido":"dorado", "usuario":"nacho98", "contrasena":"NachoDorado1998&", "edad":25})
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	with cliente as cliente_abierto:
+
+		cliente_abierto.post("/login", data={"usuario": "nacho98", "contrasena": "NachoDorado1998&"})
+
+		cliente_abierto.post("/insertar_publicacion", data={"titulo":"Titulo", "descripcion":"Descripcion"})
+
+		conexion.c.execute("SELECT * FROM publicaciones")
+
+		publicaciones=conexion.c.fetchall()
+
+		id_publicacion=publicaciones[0]["id"]
+
+		for _ in range(likes):
+
+			conexion.darLike(id_usuario, id_publicacion)
+
+		for _ in range(comentarios):
+
+			conexion.insertarComentario(id_usuario, id_publicacion, "Comentario")
+
+		respuesta=cliente_abierto.get("/me")
+
+		contenido=respuesta.data.decode()
+
+		assert respuesta.status_code==200
+		assert f'<p class="likes">{likes}</p>' in contenido
+		assert f'<p class="comentarios">{comentarios}</p>' in contenido
