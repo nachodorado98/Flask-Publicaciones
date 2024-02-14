@@ -235,3 +235,50 @@ class Conexion:
 						(id_usuario, id_publicacion, comentario))
 
 		self.confirmar()
+
+	# Metodo para obtener el detalle de una publicacion
+	def detalle_publicacion(self, id_publicacion:int)->Optional[tuple]:
+
+		self.c.execute("""SELECT pub.*, COUNT(DISTINCT l.id) AS likes, COUNT(DISTINCT c.id) AS comentarios
+							FROM (SELECT p.id, p.titulo, p.descripcion, u.usuario, TO_CHAR(p.fecha_publicacion, 'HH24:MI DD-MM-YYYY') as fecha, p.fecha_publicacion, u.id as id_usuario
+							    	FROM usuarios u
+							    	JOIN publicaciones p
+							    	ON u.id=p.id_usuario
+							    	WHERE p.id=%s) pub
+							LEFT JOIN likes l
+							ON pub.id=l.id_publicacion
+							LEFT JOIN comentarios c
+							ON pub.id=c.id_publicacion
+							GROUP BY pub.id, pub.titulo, pub.descripcion, pub.usuario, pub.fecha, pub.fecha_publicacion, pub.id_usuario
+							ORDER BY pub.fecha_publicacion DESC""",
+						(id_publicacion,))
+
+		publicacion=self.c.fetchone()
+
+		return None if publicacion is None else (publicacion["id"],
+												publicacion["titulo"],
+												publicacion["descripcion"],
+												publicacion["usuario"],
+												publicacion["fecha"],
+												publicacion["id_usuario"],
+												publicacion["likes"],
+												publicacion["comentarios"])
+
+	# Metodo para obtener los comentarios de una publicacion
+	def obtenerComentariosPublicacion(self, id_publicacion:int)->Optional[List[tuple]]:
+
+		self.c.execute("""SELECT c.id, c.comentario, TO_CHAR(c.fecha_comentario, 'HH24:MI DD-MM-YYYY') as fecha, c.fecha_comentario, u.usuario, u.id as id_usuario
+						FROM comentarios c
+						JOIN usuarios u 
+						ON c.id_usuario=u.id
+						WHERE c.id_publicacion=%s
+						ORDER BY c.fecha_comentario DESC""",
+						(id_publicacion,))
+
+		comentarios=self.c.fetchall()
+
+		return list(map(lambda comentario: (comentario["id"],
+											comentario["comentario"],
+											comentario["usuario"],
+											comentario["fecha"],
+											comentario["id_usuario"]), comentarios)) if comentarios else None

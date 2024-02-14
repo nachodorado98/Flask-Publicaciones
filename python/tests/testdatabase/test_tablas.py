@@ -1150,3 +1150,164 @@ def test_obtener_publicaciones_usuario_existe_con_likes_con_comentarios(conexion
 	assert len(publicaciones)==1
 	assert publicaciones[0][-2]==numero_likes
 	assert publicaciones[0][-1]==numero_comentarios
+
+@pytest.mark.parametrize(["id_publicacion"],
+	[(2,),(1,),(5,),(10,),(0,)]
+)
+def test_detalle_publicacion_no_existe(conexion, id_publicacion):
+
+	assert conexion.detalle_publicacion(id_publicacion) is None
+
+def test_detalle_publicacion_existe_sin_likes_sin_comentarios(conexion):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	conexion.c.execute("SELECT * FROM publicaciones")
+
+	publicaciones=conexion.c.fetchall()
+
+	id_publicacion=publicaciones[0]["id"]
+
+	datos=conexion.detalle_publicacion(id_publicacion)
+
+	assert datos[-2]==0
+	assert datos[-1]==0
+
+@pytest.mark.parametrize(["numero_likes"],
+	[(2,),(22,),(5,),(13,),(25,)]
+)
+def test_detalle_publicacion_existe_con_likes_sin_comentarios(conexion, numero_likes):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	conexion.c.execute("SELECT * FROM publicaciones")
+
+	publicaciones=conexion.c.fetchall()
+
+	id_publicacion=publicaciones[0]["id"]
+
+	for _ in range(numero_likes):
+
+		conexion.darLike(id_usuario, id_publicacion)
+
+	datos=conexion.detalle_publicacion(id_publicacion)
+
+	assert datos[-2]==numero_likes
+	assert datos[-1]==0
+
+@pytest.mark.parametrize(["numero_comentarios"],
+	[(2,),(22,),(5,),(13,),(25,)]
+)
+def test_detalle_publicacion_existe_sin_likes_con_comentarios(conexion, numero_comentarios):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	conexion.c.execute("SELECT * FROM publicaciones")
+
+	publicaciones=conexion.c.fetchall()
+
+	id_publicacion=publicaciones[0]["id"]
+
+	for _ in range(numero_comentarios):
+
+		conexion.insertarComentario(id_usuario, id_publicacion, "Comentario")
+
+	datos=conexion.detalle_publicacion(id_publicacion)
+
+	assert datos[-2]==0
+	assert datos[-1]==numero_comentarios
+
+@pytest.mark.parametrize(["numero_likes", "numero_comentarios"],
+	[
+		(2, 5),
+		(22, 10),
+		(5, 1),
+		(13, 22),
+		(25, 25)
+	]
+)
+def test_detalle_publicacion_existe_con_likes_con_comentarios(conexion, numero_likes, numero_comentarios):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	conexion.c.execute("SELECT * FROM publicaciones")
+
+	publicaciones=conexion.c.fetchall()
+
+	id_publicacion=publicaciones[0]["id"]
+
+	for _ in range(numero_likes):
+
+		conexion.darLike(id_usuario, id_publicacion)
+
+	for _ in range(numero_comentarios):
+
+		conexion.insertarComentario(id_usuario, id_publicacion, "Comentario")
+
+	datos=conexion.detalle_publicacion(id_publicacion)
+
+	assert datos[-2]==numero_likes
+	assert datos[-1]==numero_comentarios
+
+@pytest.mark.parametrize(["id_publicacion"],
+	[(2,),(1,),(5,),(10,),(0,)]
+)
+def test_obtener_comentarios_no_existen(conexion, id_publicacion):
+
+	assert conexion.obtenerComentariosPublicacion(id_publicacion) is None
+
+def test_obtener_comentarios_existe(conexion):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	conexion.c.execute("SELECT * FROM publicaciones")
+
+	publicaciones=conexion.c.fetchall()
+
+	id_publicacion=publicaciones[0]["id"]
+
+	conexion.insertarComentario(id_usuario, id_publicacion, "Comentario")
+
+	comentarios=conexion.obtenerComentariosPublicacion(id_publicacion)
+
+	assert len(comentarios)==1

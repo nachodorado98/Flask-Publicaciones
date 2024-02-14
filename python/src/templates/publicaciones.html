@@ -37,7 +37,7 @@
 
                 {% for publicacion in publicaciones %}
 
-                    <div class="tarjeta">
+                    <div class="tarjeta" onclick="window.location.href='/detalle_publicacion/{{ publicacion[0] }}'">
                         <h2>{{ publicacion[1] }}</h2>
                         <p class="descripcion">{{ publicacion[2] }}</p>
                         <a href="/usuario/{{ publicacion[5] }}" class="usuario">{{ publicacion[3] }}</a>

@@ -1,0 +1,48 @@
+{% extends "publicaciones.html" %}
+
+{% block titulo %}
+
+{% endblock titulo %}
+
+
+{% block principal %}
+
+<div class="tarjeta-detalle">
+    <h2>{{ datos_publicacion[1] }}</h2>
+    <p class="descripcion">{{ datos_publicacion[2] }}</p>
+    <a href="/usuario/{{ datos_publicacion[5] }}" class="usuario">{{ datos_publicacion[3] }}</a>
+    <p class="fecha">{{ datos_publicacion[4] }}</p>
+    <div class="contenedor-acciones">
+        <a href="#" class="numero-likes">
+            <p class="likes">{{ datos_publicacion[6] }}</p>
+        </a>
+        <a href="/dar_like/{{ datos_publicacion[0] }}" class="btn-me-gusta">
+            <img src="{{ url_for('static', filename='imagenes/like.png') }}" alt="Me gusta" width="22" height="22">
+        </a>
+        <p class="comentarios">{{ datos_publicacion[7] }}</p>
+        <a href="/comentar/{{ datos_publicacion[0] }}" class="btn-ver-comentarios">
+            <img src="{{ url_for('static', filename='imagenes/comentario.png') }}" alt="Comentario" width="22" height="22">
+        </a>
+    </div>
+</div>
+
+
+{% if comentarios %}
+
+    <div class="tarjetas-comentarios">
+
+        {% for comentario in comentarios %}
+
+            <div class="tarjeta-comentario">
+                <h2>{{ comentario[1] }}</h2>
+                <a href="/usuario/{{ comentario[4] }}" class="usuario">{{ comentario[2] }}</a>
+                <p class="fecha">{{ comentario[3] }}</p>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% endif %}
+
+{% endblock principal %}

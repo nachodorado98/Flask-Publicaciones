@@ -14,7 +14,7 @@ body {
 }
 
 .contenido-principal h1 {
-    font-size: 50px;
+    font-size: 45px;
 }
 
 #toggle-navbar {
@@ -64,8 +64,8 @@ body {
 }
 
 .tarjetas {
-    margin-top: 20px;
-    max-height: 490px;
+    margin-top: 10px;
+    max-height: 560px;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #bdc3c7 #ecf0f1;
@@ -79,11 +79,16 @@ body {
     background-color: #ecf0f1;
     border: 1px solid #bdc3c7;
     border-radius: 10px;
-    padding: 20px;
+    padding: 10px;
     margin-bottom: 10px;
     width: 90%;
     text-align: center;
     position: relative;
+}
+
+.tarjeta:hover {
+    background-color: #dfe6e9;
+    transition: background-color 0.3s ease;
 }
 
 .tarjeta h2 {
@@ -136,11 +141,13 @@ body {
     font-size: 20px;
 }
 
-.btn-me-gusta .btn-ver-comentarios img {
-    margin-right: 30px;
+.tarjeta .btn-me-gusta,
+.tarjeta .btn-ver-comentarios img {
+    margin-right: 10px;
 }
 
-.btn-me-gusta:hover .btn-ver-comentarios:hover {
+.tarjeta .btn-me-gusta:hover,
+.tarjeta .btn-ver-comentarios:hover {
     transform: scale(1.1);
 }
 
@@ -261,7 +268,7 @@ footer {
 
 .tarjetas-perfil {
     margin-top: 20px;
-    max-height: 250px;
+    max-height: 280px;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #bdc3c7 #ecf0f1;
@@ -275,11 +282,16 @@ footer {
     background-color: #ecf0f1;
     border: 1px solid #bdc3c7;
     border-radius: 10px;
-    padding: 20px;
+    padding: 10px;
     margin-bottom: 10px;
     width: 90%;
     text-align: center;
     position: relative;
+}
+
+.tarjeta-perfil:hover {
+    background-color: #dfe6e9;
+    transition: background-color 0.3s ease;
 }
 
 .tarjeta-perfil h2 {
@@ -340,11 +352,11 @@ footer {
     transform: scale(1.1);
 }
 
-.tarjeta-perfil .btn-ver-comentarios-perfil img {
+.tarjeta-perfil .btn-ver-comentarios img {
     margin-right: 10px;
 }
 
-.tarjeta-perfil .btn-ver-comentarios-perfil:hover {
+.tarjeta-perfil .btn-ver-comentarios:hover {
     transform: scale(1.1);
 }
 
@@ -370,4 +382,150 @@ footer {
 
 .nueva-publicacion-button-perfil:hover {
     background-color: #2980b9;
+}
+
+
+/*------------------------------------------------------DETALLE-----------------------------------------------*/
+
+.tarjeta-detalle {
+    background-color: #ecf0f1;
+    border: 1px solid #bdc3c7;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+}
+
+.tarjeta-detalle:hover {
+    background-color: #dfe6e9;
+    transition: background-color 0.3s ease;
+}
+
+.tarjeta-detalle h2 {
+    font-size: 50px;
+    margin-top: 40px;
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+.tarjeta-detalle .descripcion {
+    font-size: 27px;
+    margin-bottom: 50px;
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+.tarjeta-detalle .usuario {
+    position: absolute;
+    top: 0px;
+    left: 10px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+    font-size: 22px;
+}
+
+.tarjeta-detalle .fecha {
+    position: absolute;
+    bottom: 0px;
+    right: 10px;
+    color: #555;
+    font-size: 20px;
+}
+
+.tarjeta-detalle .contenedor-acciones {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.tarjeta-detalle .numero-likes {
+    text-decoration: none;
+}
+
+.tarjeta-detalle .numero-likes:hover {
+    transform: scale(1.1);
+}
+
+.tarjeta-detalle .likes {
+    margin-right: 20px;
+    color: #555;
+    font-size: 25px;
+}
+
+.tarjeta-detalle .comentarios {
+    margin-right: 20px;
+    margin-left: 40px;
+    color: #555;
+    font-size: 25px;
+}
+
+.tarjeta-detalle .btn-me-gusta img {
+    margin-right: 10px;
+}
+
+.tarjeta-detalle .btn-me-gusta:hover {
+    transform: scale(1.1);
+}
+
+.tarjeta-detalle .btn-ver-comentarios-perfil img {
+    margin-right: 10px;
+}
+
+.tarjeta-detalle .btn-ver-comentarios:hover {
+    transform: scale(1.1);
+}
+
+.tarjetas-comentarios {
+    margin-top: 40px;
+    max-height: 264px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #bdc3c7 #ecf0f1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 90px;
+}
+
+.tarjeta-comentario {
+    background-color: #ecf0f1;
+    border: 1px solid #bdc3c7;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+}
+
+.tarjeta-comentario:hover {
+    background-color: #dfe6e9;
+    transition: background-color 0.3s ease;
+}
+
+.tarjeta-comentario h2 {
+    font-size: 28px;
+    margin-top: 40px;
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+.tarjeta-comentario .usuario {
+    position: absolute;
+    top: 0px;
+    left: 10px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+}
+
+.tarjeta-comentario .fecha {
+    position: absolute;
+    bottom: 0px;
+    right: 10px;
+    color: #555;
 }
