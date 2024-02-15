@@ -1311,3 +1311,140 @@ def test_obtener_comentarios_existe(conexion):
 	comentarios=conexion.obtenerComentariosPublicacion(id_publicacion)
 
 	assert len(comentarios)==1
+
+def test_numero_likes_no_existe_publicacion(conexion):
+
+	assert conexion.numero_likes(0)==0
+
+def test_numero_likes_existe_publicacion_sin_like(conexion):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	conexion.c.execute("SELECT * FROM publicaciones")
+
+	publicaciones=conexion.c.fetchall()
+
+	id_publicacion=publicaciones[0]["id"]
+
+	assert conexion.numero_likes(id_publicacion)==0
+
+def test_numero_likes_existe_publicacion_con_like(conexion):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	conexion.c.execute("SELECT * FROM publicaciones")
+
+	publicaciones=conexion.c.fetchall()
+
+	id_publicacion=publicaciones[0]["id"]
+
+	conexion.darLike(id_usuario, id_publicacion)
+
+	assert conexion.numero_likes(id_publicacion)==1
+
+@pytest.mark.parametrize(["numero_likes"],
+	[(2,),(22,),(5,),(13,),(25,)]
+)
+def test_numero_likes_existe_publicacion_con_likes(conexion, numero_likes):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	conexion.c.execute("SELECT * FROM publicaciones")
+
+	publicaciones=conexion.c.fetchall()
+
+	id_publicacion=publicaciones[0]["id"]
+
+	for _ in range(numero_likes):
+
+		conexion.darLike(id_usuario, id_publicacion)
+
+	assert conexion.numero_likes(id_publicacion)==numero_likes
+
+@pytest.mark.parametrize(["numero_likes"],
+	[(2,),(22,),(5,),(13,),(25,)]
+)
+def test_numero_likes_existe_publicacion_con_likes_varias_publicaciones(conexion, numero_likes):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+	conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	conexion.c.execute("SELECT * FROM publicaciones")
+
+	publicaciones=conexion.c.fetchall()
+
+	id_publicacion_1=publicaciones[0]["id"]
+	id_publicacion_2=publicaciones[1]["id"]
+
+	for _ in range(numero_likes):
+
+		conexion.darLike(id_usuario, id_publicacion_1)
+
+	conexion.darLike(id_usuario, id_publicacion_2)
+	conexion.darLike(id_usuario, id_publicacion_2)
+	conexion.darLike(id_usuario, id_publicacion_2)
+
+	assert conexion.numero_likes(id_publicacion_1)==numero_likes
+
+@pytest.mark.parametrize(["id_publicacion"],
+	[(2,),(1,),(5,),(10,),(0,)]
+)
+def test_obtener_likes_no_existen(conexion, id_publicacion):
+
+	assert conexion.obtenerLikesPublicacion(id_publicacion) is None
+
+def test_obtener_likes_existe(conexion):
+
+	conexion.insertarUsuario("nacho98", "1234", "nacho", "dorado", 25)
+
+	conexion.c.execute("SELECT * FROM usuarios")
+
+	usuarios=conexion.c.fetchall()
+
+	id_usuario=usuarios[0]["id"]
+
+	conexion.insertarPublicacion(id_usuario, "Titulo", "Descripcion")
+
+	conexion.c.execute("SELECT * FROM publicaciones")
+
+	publicaciones=conexion.c.fetchall()
+
+	id_publicacion=publicaciones[0]["id"]
+
+	conexion.darLike(id_usuario, id_publicacion)
+
+	likes=conexion.obtenerLikesPublicacion(id_publicacion)
+
+	assert len(likes)==1

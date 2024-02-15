@@ -1,0 +1,27 @@
+{% extends "publicaciones.html" %}
+
+{% block titulo %}
+
+<h1>Le gustó a:</h1>
+
+{% endblock titulo %}
+
+{% block principal %}
+
+<div class="tarjetas-likes">
+
+    {% for like in likes %}
+
+        <div class="tarjeta-like">
+            <a href="/usuario/{{ like[2] }}" class="usuario">{{ like[1] }}</a>
+        </div>
+
+    {% endfor %}
+
+</div>
+
+<div class="contenedor-volver">
+    <a href="/detalle_publicacion/{{ id_publicacion }}" class="volver-button">Volver a la publicacion</a>
+</div>
+
+{% endblock principal %}

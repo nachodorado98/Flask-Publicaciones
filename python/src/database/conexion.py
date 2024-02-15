@@ -282,3 +282,27 @@ class Conexion:
 											comentario["usuario"],
 											comentario["fecha"],
 											comentario["id_usuario"]), comentarios)) if comentarios else None
+
+	# Metodo para obtener el numero de likes de una publicacion
+	def numero_likes(self, id_publicacion:int)->int:
+
+		self.c.execute("""SELECT count(1) as numero_likes
+						FROM likes
+						WHERE id_publicacion=%s""",
+						(id_publicacion,))
+
+		return self.c.fetchone()["numero_likes"]
+
+	# Metodo para obtener los likes de una publicacion
+	def obtenerLikesPublicacion(self, id_publicacion:int)->Optional[List[tuple]]:
+
+		self.c.execute("""SELECT l.id, u.usuario, u.id as id_usuario
+						FROM likes l
+						JOIN usuarios u 
+						ON l.id_usuario=u.id
+						WHERE l.id_publicacion=%s""",
+						(id_publicacion,))
+
+		likes=self.c.fetchall()
+
+		return list(map(lambda like: (like["id"], like["usuario"], like["id_usuario"]), likes)) if likes else None
